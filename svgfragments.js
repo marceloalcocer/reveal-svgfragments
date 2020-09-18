@@ -45,14 +45,23 @@ class SVGFragmentsPlugin{
 	constructor(){}
 
 	init(reveal){
-		if(document.readyState === "complete") this.initializeSVGDocuments();
-		else window.addEventListener("load", (event) => {this.initializeSVGDocuments();})
+		this.initializeSVGDocuments();
 		this.addFragmentEventListeners();
 	}
 
 	initializeSVGDocuments(){
-		this.injectSVGStylesheet();
-		this.updateSVGFragments();
+		if(document.readyState !== "complete"){
+			window.addEventListener(
+				"load",
+				(event) => {
+					this.injectSVGStylesheet();
+					this.updateSVGClasses();
+				}
+			)
+		} else {
+				this.injectSVGStylesheet();
+				this.updateSVGClasses();
+		}
 	}
 
 	injectSVGStylesheet(){
@@ -70,7 +79,7 @@ class SVGFragmentsPlugin{
 		)
 	}
 
-	updateSVGFragments(){
+	updateSVGClasses(){
 		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
 			(element) => {
 				let fragment = new SVGFragment(element);
