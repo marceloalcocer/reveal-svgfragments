@@ -1,10 +1,8 @@
 /* SVG fragment stylesheet
  *
- * Copy of fragment section of dist/reveal.css
+ * Essentially a lightly modified copy of the fragments section of reveal.css (Copyright (C) 2020 Hakim El Hattab, https://hakim.se):
  *
- * N.b.:
- *
- *  * ".reveal .slides section" selector prefix removed from all styles
+ *   https://raw.githubusercontent.com/hakimel/reveal.js/master/dist/reveal.css
  *
  */
 
