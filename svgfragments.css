@@ -1,0 +1,166 @@
+/* SVG fragment stylesheet
+ *
+ * Copy of fragment section of dist/reveal.css
+ *
+ * N.b.:
+ *
+ *  * ".reveal .slides section" selector prefix removed from all styles
+ *
+ */
+
+.fragment {
+    opacity: 0;
+    visibility: hidden;
+    transition: all .2s ease;
+    will-change: opacity
+}
+
+.fragment.visible {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.disabled {
+    transition: none
+}
+
+.fragment.grow {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.grow.visible {
+    transform: scale(1.3)
+}
+
+.fragment.shrink {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.shrink.visible {
+    transform: scale(.7)
+}
+
+.fragment.zoom-in {
+    transform: scale(.1)
+}
+
+.fragment.zoom-in.visible {
+    transform: none
+}
+
+.fragment.fade-out {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.fade-out.visible {
+    opacity: 0;
+    visibility: hidden
+}
+
+.fragment.semi-fade-out {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.semi-fade-out.visible {
+    opacity: .5;
+    visibility: inherit
+}
+
+.fragment.strike {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.strike.visible {
+    text-decoration: line-through
+}
+
+.fragment.fade-up {
+    transform: translate(0,40px)
+}
+
+.fragment.fade-up.visible {
+    transform: translate(0,0)
+}
+
+.fragment.fade-down {
+    transform: translate(0,-40px)
+}
+
+.fragment.fade-down.visible {
+    transform: translate(0,0)
+}
+
+.fragment.fade-right {
+    transform: translate(-40px,0)
+}
+
+.fragment.fade-right.visible {
+    transform: translate(0,0)
+}
+
+.fragment.fade-left {
+    transform: translate(40px,0)
+}
+
+.fragment.fade-left.visible {
+    transform: translate(0,0)
+}
+
+.fragment.current-visible,.fragment.fade-in-then-out {
+    opacity: 0;
+    visibility: hidden
+}
+
+.fragment.current-visible.current-fragment,.fragment.fade-in-then-out.current-fragment {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.fade-in-then-semi-out {
+    opacity: 0;
+    visibility: hidden
+}
+
+.fragment.fade-in-then-semi-out.visible {
+    opacity: .5;
+    visibility: inherit
+}
+
+.fragment.fade-in-then-semi-out.current-fragment {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.highlight-blue,.fragment.highlight-current-blue,.fragment.highlight-current-green,.fragment.highlight-current-red,.fragment.highlight-green,.fragment.highlight-red {
+    opacity: 1;
+    visibility: inherit
+}
+
+.fragment.highlight-red.visible {
+    color: #ff2c2d
+}
+
+.fragment.highlight-green.visible {
+    color: #17ff2e
+}
+
+.fragment.highlight-blue.visible {
+    color: #1b91ff
+}
+
+.fragment.highlight-current-red.current-fragment {
+    color: #ff2c2d
+}
+
+.fragment.highlight-current-green.current-fragment {
+    color: #17ff2e
+}
+
+.fragment.highlight-current-blue.current-fragment {
+    color: #1b91ff
+}
