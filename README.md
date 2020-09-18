@@ -42,6 +42,7 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 ```
 
 ```html
+<!-- presentation.html -->
 <object data="circles.svg" type="image/svg+xml">
   <span class="svg-fragment" data-selector="#circle1"></span>
 </object>
@@ -50,6 +51,7 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 [Fragment effects](https://revealjs.com/fragments/) and [indices](https://revealjs.com/fragments/#fragment-order) can be added as normal;
 
 ```html
+<!-- presentation.html -->
 <object data="circles.svg" type="image/svg+xml">
   <span class="svg-fragment fade-in" data-fragment-index="2" data-selector="#circle0"></span>
   <span class="svg-fragment fade-up" data-fragment-index="1" data-selector="#circle1"></span>
