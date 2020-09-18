@@ -2,6 +2,7 @@
 
 const fragmentEvents = ["fragmentshown", "fragmenthidden"];
 const SVGFragmentClass = "svg-fragment";
+const SVGStylesheet = "/plugin/svgfragments/svgfragments.css";
 
 class Fragment{
 
@@ -59,12 +60,32 @@ class SVGFragmentsPlugin{
 	constructor(){}
 
 	init(reveal){
-		if(document.readyState === "complete") this.initializeSVGFragments();
-		else window.addEventListener("load", (event) => {this.initializeSVGFragments();})
+		if(document.readyState === "complete") this.initializeSVGDocuments();
+		else window.addEventListener("load", (event) => {this.initializeSVGDocuments();})
 		this.addFragmentEventListeners();
 	}
 
-	initializeSVGFragments(){
+	initializeSVGDocuments(){
+		this.injectSVGStylesheet();
+		this.syncSVGFragmentClasses();
+	}
+
+	injectSVGStylesheet(){
+		// N.b
+		//   * Injects stylehseet into all SVG documents in HTML document
+		document.querySelectorAll('object[type="image/svg+xml"]').forEach(
+			(element) => {
+				let SVGDocument = element.contentDocument;
+				let piNode = SVGDocument.createProcessingInstruction(
+					"xml-stylesheet",
+					`type="text/css" href="${SVGStylesheet}"`
+				);
+				SVGDocument.insertBefore(piNode, SVGDocument.documentElement);
+			}
+		)
+	}
+
+	syncSVGFragmentClasses(){
 		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
 			(element) => {new Fragment(element).syncClasses();}
 		);
@@ -78,8 +99,6 @@ class SVGFragmentsPlugin{
 			);
 		}
 	}
-
-
 
 }
 
