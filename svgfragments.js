@@ -1,10 +1,12 @@
 "use strict";
 
 const fragmentEvents = ["fragmentshown", "fragmenthidden"];
+const fragmentClass = "fragment";
 const SVGFragmentClass = "svg-fragment";
 const SVGStylesheet = "/plugin/svgfragments/svgfragments.css";
 
-class Fragment{
+
+class SVGFragment{
 
 	HTMLElement = null;
 
@@ -12,46 +14,29 @@ class Fragment{
 		this.HTMLElement = HTMLElement;
 	}
 
-	get isSVGFragment(){
-		return this.HTMLElement.matches(`.${SVGFragmentClass}`);
-	}
-
-	SVGAssertWrapper(fun){
-		let ret = null;
-		if(this.isSVGFragment) ret = fun();
-		return ret;
-	}
-
 	get SVGDocument(){
-		return this.SVGAssertWrapper(
-			() => this.HTMLElement.parentElement.contentDocument
-		);
+		return this.HTMLElement.parentElement.contentDocument;
 	}
 
 	get SVGSelector(){
-		return this.SVGAssertWrapper(
-			() => this.HTMLElement.dataset.selector
-		);
+		return this.HTMLElement.dataset.selector;
 	}
 
 	get SVGElement(){
-		return this.SVGAssertWrapper(
-			// N.b. 
-			//   * First match only
-			() => this.SVGDocument.querySelector(this.SVGSelector)
-		);
+		// N.b. 
+		//   * First match only
+		return this.SVGDocument.querySelector(this.SVGSelector);
 	}
 
-	syncClasses(){
-		this.SVGAssertWrapper(
-			// N.b.
-			//   * Overwrites any previous class entries
-			//   * Leaves unused SVGFragmentClass
-			() => {this.SVGElement.classList = this.HTMLElement.classList;}
-		)
+	update(){
+		// N.b.
+		//   * Overwrites any previous class entries
+		//   * Leaves unused SVGFragmentClass
+		this.SVGElement.classList = this.HTMLElement.classList;
 	}
 
 }
+
 
 class SVGFragmentsPlugin{
 
@@ -67,7 +52,7 @@ class SVGFragmentsPlugin{
 
 	initializeSVGDocuments(){
 		this.injectSVGStylesheet();
-		this.syncSVGFragmentClasses();
+		this.updateSVGFragments();
 	}
 
 	injectSVGStylesheet(){
@@ -85,9 +70,12 @@ class SVGFragmentsPlugin{
 		)
 	}
 
-	syncSVGFragmentClasses(){
+	updateSVGFragments(){
 		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
-			(element) => {new Fragment(element).syncClasses();}
+			(element) => {
+				let fragment = new SVGFragment(element);
+				fragment.update()
+			}
 		);
 	}
 
@@ -95,7 +83,12 @@ class SVGFragmentsPlugin{
 		for(let fragmentEvent of fragmentEvents){
 			Reveal.on(
 				fragmentEvent,
-				(event) => {new Fragment(event.fragment).syncClasses();}
+				(event) => {
+					if (event.fragment.matches(`.${SVGFragmentClass}`)){
+						let fragment = new SVGFragment(event.fragment);
+						fragment.update();
+					}
+				}
 			);
 		}
 	}
