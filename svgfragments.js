@@ -45,8 +45,26 @@ class SVGFragmentsPlugin{
 	constructor(){}
 
 	init(reveal){
+		this.initializeSVGFragments();
 		this.initializeSVGDocuments();
 		this.addFragmentEventListeners();
+	}
+
+	initializeSVGFragments(){
+		if(document.readyState === "loading"){
+			document.addEventListener(
+				"DOMContentLoaded", 
+				(event) => this.addFragmentClasses()
+			)
+		} else this.addFragmentClasses();
+	}
+
+	addFragmentClasses(){
+		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
+			(element) => element.classList.add(fragmentClass)
+		);
+		if(Reveal.isReady()) Reveal.syncFragments();
+		else Reveal.on("ready", (event) => Reveal.syncFragments());
 	}
 
 	initializeSVGDocuments(){
@@ -103,5 +121,6 @@ class SVGFragmentsPlugin{
 	}
 
 }
+
 
 const SVGFragments = () => {return new SVGFragmentsPlugin();}
