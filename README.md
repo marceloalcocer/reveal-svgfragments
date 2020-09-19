@@ -2,6 +2,8 @@
 
 A [reveal.js](https://github.com/hakimel/reveal.js) plugin to enable SVG element [fragments](https://revealjs.com/fragments/).
 
+[Live demo](https://marceloalcocer.github.io/svgfragments.html)
+
 ## Installation
 
 Copy the repository to the `plugin` directory of your `reveal.js` installation;
