@@ -45,63 +45,78 @@ class SVGFragmentsPlugin{
 	constructor(){}
 
 	init(reveal){
-		this.initializeSVGFragments();
-		this.initializeSVGDocuments();
+		this.initHTMLDependent();
 		this.addFragmentEventListeners();
 	}
 
-	initializeSVGFragments(){
-		if(document.readyState === "loading"){
-			document.addEventListener(
-				"DOMContentLoaded", 
-				(event) => this.addFragmentClasses()
-			)
-		} else this.addFragmentClasses();
+	initHTMLDependent(){
+		let onDOMContentLoaded = (event) => {
+			this.initSVGDependent();
+			this.addFragmentClasses();
+			this.syncFragments();
+		};
+		switch(document.readyState){
+			case "loading":
+				document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+				break;
+			case "interactive":
+			case "complete":
+				onDOMContentLoaded(null);
+		}
 	}
 
 	addFragmentClasses(){
 		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
 			(element) => element.classList.add(fragmentClass)
 		);
+	}
+
+	syncFragments(){
 		if(Reveal.isReady()) Reveal.syncFragments();
 		else Reveal.on("ready", (event) => Reveal.syncFragments());
 	}
 
-	initializeSVGDocuments(){
-		if(document.readyState !== "complete"){
-			window.addEventListener(
-				"load",
-				(event) => {
-					this.injectSVGStylesheet();
-					this.updateSVGClasses();
-				}
-			)
-		} else {
-				this.injectSVGStylesheet();
-				this.updateSVGClasses();
+	initSVGDependent(){
+		let onload = (event) => {
+			this.injectSVGStylesheet(event.target);
+			this.updateSVGClasses(event.target);
 		}
-	}
-
-	injectSVGStylesheet(){
+		let onSVGDocument = (event) => {
+			// Despite SVG document.readyState === "complete", SVG DOM does not seem to have
+			// been parsed. Have to instead wait for SVG window.load event to ensure DOM parsing.
+			// To ensure window.load has not yet been dispatched however, usually inspect 
+			// document.readyState, however this will probably just show "complete"! As such,
+			// can only rely on DOM access success/failure to detect SVG DOM parsing state.
+			let objElement = event.target;
+			let SVGDocument = objElement.contentDocument;
+			let SVGWindow = objElement.contentWindow;
+			if(SVGDocument.documentElement.tagName.toLowerCase() !== "svg") SVGWindow.addEventListener("load", (event) => onload({target: objElement}));
+			else onload({target: objElement});
+		}
 		// N.b
-		//   * Injects stylehseet into all SVG documents in HTML document
+		//   * Acts on __ALL__ SVG documents in HTML document
 		document.querySelectorAll('object[type="image/svg+xml"]').forEach(
 			(element) => {
-				let SVGDocument = element.contentDocument;
-				let piNode = SVGDocument.createProcessingInstruction(
-					"xml-stylesheet",
-					`type="text/css" href="${SVGStylesheet}"`
-				);
-				SVGDocument.insertBefore(piNode, SVGDocument.documentElement);
+				if(!element.contentDocument) element.addEventListener("load", onSVGDocument);
+				else onSVGDocument({target: element});
 			}
-		)
+		);
 	}
 
-	updateSVGClasses(){
-		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
+	injectSVGStylesheet(objElement){
+		let SVGDocument = objElement.contentDocument;
+		let piNode = SVGDocument.createProcessingInstruction(
+			"xml-stylesheet",
+			`type="text/css" href="${SVGStylesheet}"`
+		);
+		SVGDocument.insertBefore(piNode, SVGDocument.documentElement);
+	}
+
+	updateSVGClasses(objElement){
+		objElement.querySelectorAll(`.${SVGFragmentClass}`).forEach(
 			(element) => {
 				let fragment = new SVGFragment(element);
-				fragment.update()
+				fragment.update();
 			}
 		);
 	}
