@@ -126,9 +126,8 @@ class SVGFragmentsPlugin{
 			Reveal.on(
 				fragmentEvent,
 				(event) => {
-					if (event.fragment.matches(`.${SVGFragmentClass}`)){
-						let fragment = new SVGFragment(event.fragment);
-						fragment.update();
+					for(let fragment of event.fragments){
+						if (fragment.matches(`.${SVGFragmentClass}`)) new SVGFragment(fragment).update();
 					}
 				}
 			);
