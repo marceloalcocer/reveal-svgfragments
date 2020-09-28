@@ -15,7 +15,7 @@ class SVGFragment{
 	}
 
 	get SVGDocument(){
-		return this.HTMLElement.parentElement.contentDocument;
+		return this.HTMLElement.closest('object[type="image/svg+xml"]').contentDocument;
 	}
 
 	get SVGSelector(){
@@ -113,7 +113,7 @@ class SVGFragmentsPlugin{
 	}
 
 	updateSVGClasses(objElement){
-		objElement.querySelectorAll(`.${SVGFragmentClass}`).forEach(
+		objElement.querySelectorAll(`object>.${SVGFragmentClass}`).forEach(
 			(element) => {
 				let fragment = new SVGFragment(element);
 				fragment.update();

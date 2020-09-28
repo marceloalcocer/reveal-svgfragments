@@ -50,18 +50,18 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 </object>
 ```
 
-[Fragment effects](https://revealjs.com/fragments/) and [indices](https://revealjs.com/fragments/#fragment-order) can be added as normal;
+[Fragment effects](https://revealjs.com/fragments/), [nested fragments](https://revealjs.com/fragments/#nested-fragments), and [fragment indices](https://revealjs.com/fragments/#fragment-order) can be used as normal;
 
 ```html
 <!-- presentation.html -->
 <object data="circles.svg" type="image/svg+xml">
-  <span class="svg-fragment fade-in" data-fragment-index="2" data-selector="#circle0"></span>
+  <span class="svg-fragment fade-in" data-fragment-index="2" data-selector="#circle0">
+    <span class="svg-fragment fade-out" data-fragment-index="3" data-selector="#circle0"></span>
+  </span>
   <span class="svg-fragment fade-up" data-fragment-index="1" data-selector="#circle1"></span>
-  <span class="svg-fragment fade-down" data-fragment-index="3" data-selector="#circle2"></span>
+  <span class="svg-fragment fade-down" data-fragment-index="4" data-selector="#circle2"></span>
 </object>
 ```
 
-however, highlight effects are not applied to SVG elements correctly.
-
-[Nested fragments](https://revealjs.com/fragments/#nested-fragments) are currently not supported.
+Some fragment effects (e.g. highlights) may however not apply correctly to SVG elements.
 
