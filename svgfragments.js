@@ -113,11 +113,9 @@ class SVGFragmentsPlugin{
 	}
 
 	updateSVGClasses(objElement){
+		// Set initial classes for each top-level fragment
 		objElement.querySelectorAll(`object>.${SVGFragmentClass}`).forEach(
-			(element) => {
-				let fragment = new SVGFragment(element);
-				fragment.update();
-			}
+			(element) => { new SVGFragment(element).update(); }
 		);
 	}
 
