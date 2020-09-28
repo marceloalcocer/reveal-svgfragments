@@ -1,8 +1,8 @@
 "use strict";
 
 const fragmentEvents = ["fragmentshown", "fragmenthidden"];
-const fragmentClass = "fragment";
-const SVGFragmentClass = "svg-fragment";
+const fragmentSelector = ".fragment";
+const objectSelector = 'object[type="image/svg+xml"]';
 const SVGStylesheet = "/plugin/svgfragments/svgfragments.css";
 
 
@@ -24,7 +24,7 @@ class SVGFragment{
 
 	// SVG document
 	get SVGDocument(){
-		return this.HTMLElement.closest('object[type="image/svg+xml"]').contentDocument;
+		return this.HTMLElement.closest(objectSelector).contentDocument;
 	}
 
 	// SVG selector
@@ -41,9 +41,7 @@ class SVGFragment{
 
 	// Synchronize class attributes
 	//
-	//   N.b.
-	//     * Overwrites any previous class attributes
-	//     * Leaves unused SVGFragmentClass
+	//   N.b. Overwrites any previous class attributes
 	//
 	update(){
 		this.SVGElement.classList = this.HTMLElement.classList;
@@ -81,9 +79,6 @@ class SVGFragmentsPlugin{
 			// SVG dependent initializations
 			this.initSVGDependent();
 
-			// Add '.fragment' to '.svg-fragment' elements
-			this.addFragmentClasses();
-
 			// Register new fragments with reveal.js
 			this.syncFragments();
 
@@ -99,13 +94,6 @@ class SVGFragmentsPlugin{
 				onDOMContentLoaded(null);
 		}
 
-	}
-
-	// Add '.fragment' to '.svg-fragment' elements
-	addFragmentClasses(){
-		document.querySelectorAll(`.${SVGFragmentClass}`).forEach(
-			(element) => element.classList.add(fragmentClass)
-		);
 	}
 
 	// Register new fragments with reveal.js
@@ -148,7 +136,7 @@ class SVGFragmentsPlugin{
 		//
 		//   N.b. Acts on __ALL__ SVG documents in HTML document
 		//
-		document.querySelectorAll('object[type="image/svg+xml"]').forEach(
+		document.querySelectorAll(objectSelector).forEach(
 			(element) => {
 				if(!element.contentDocument) element.addEventListener("load", onSVGDocument);
 				else onSVGDocument({target: element});
@@ -172,7 +160,7 @@ class SVGFragmentsPlugin{
 	//   N.b. If nested, only need to set for top-level fragments
 	//
 	updateSVGClasses(objElement){
-		objElement.querySelectorAll(`object>.${SVGFragmentClass}`).forEach(
+		objElement.querySelectorAll(`${objectSelector}>${fragmentSelector}`).forEach(    // N.b. Child combinator
 			(element) => { new SVGFragment(element).update(); }
 		);
 	}
@@ -184,7 +172,9 @@ class SVGFragmentsPlugin{
 				fragmentEvent,
 				(event) => {
 					for(let fragment of event.fragments){
-						if (fragment.matches(`.${SVGFragmentClass}`)) new SVGFragment(fragment).update();
+						if (fragment.matches(`${objectSelector} ${fragmentSelector}`)) {    // N.b. Decendent combinator
+							new SVGFragment(fragment).update();
+						}
 					}
 				}
 			);

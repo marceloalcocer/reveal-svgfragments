@@ -32,7 +32,7 @@ Include `svgfragments.js` in the presentation (after `reveal.js`), and add `SVGF
 
 ## Usage
 
-Include SVG documents in the presentation using `<object>` tags.  Add child tags with `class="svg-fragment"` to mark elements within the SVG file as fragments. Elements are specified using [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) in the `data-selector` attribute;
+Include SVG documents in the presentation using `<object>` tags.  Add child tags with `class="fragment"` to mark elements within the SVG file as fragments. Elements are specified using [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) in the `data-selector` attribute;
 
 ```svg
 <!-- circles.svg -->
@@ -46,7 +46,7 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 ```html
 <!-- presentation.html -->
 <object data="circles.svg" type="image/svg+xml">
-  <span class="svg-fragment" data-selector="#circle1"></span>
+  <span class="fragment" data-selector="#circle1"></span>
 </object>
 ```
 
@@ -55,11 +55,11 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 ```html
 <!-- presentation.html -->
 <object data="circles.svg" type="image/svg+xml">
-  <span class="svg-fragment fade-in" data-fragment-index="2" data-selector="#circle0">
-    <span class="svg-fragment fade-out" data-fragment-index="3" data-selector="#circle0"></span>
+  <span class="fragment fade-in" data-fragment-index="2" data-selector="#circle0">
+    <span class="fragment fade-out" data-fragment-index="3" data-selector="#circle0"></span>
   </span>
-  <span class="svg-fragment fade-up" data-fragment-index="1" data-selector="#circle1"></span>
-  <span class="svg-fragment fade-down" data-fragment-index="4" data-selector="#circle2"></span>
+  <span class="fragment fade-up" data-fragment-index="1" data-selector="#circle1"></span>
+  <span class="fragment fade-down" data-fragment-index="4" data-selector="#circle2"></span>
 </object>
 ```
 
