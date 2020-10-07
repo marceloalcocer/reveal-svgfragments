@@ -17,9 +17,13 @@ class SVGFragment{
 	// HTML element
 	HTMLElement = null;
 
+	// SVG element initial class attribute
+	SVGClassName = null;
+
 	// Class constructor
 	constructor(HTMLElement){
 		this.HTMLElement = HTMLElement;
+		this.SVGClassName = this.SVGElement.className.baseVal;     // N.b. SVGAnimatedString (https://developer.mozilla.org/en-US/docs/Web/API/Element/className#Notes)
 	}
 
 	// SVG document
@@ -40,11 +44,8 @@ class SVGFragment{
 	}
 
 	// Synchronize class attributes
-	//
-	//   N.b. Overwrites any previous class attributes
-	//
-	update(){
-		this.SVGElement.classList = this.HTMLElement.classList;
+	sync(){
+		this.SVGElement.className.baseVal = this.SVGClassName + " " + this.HTMLElement.className;
 	}
 
 }
@@ -52,6 +53,9 @@ class SVGFragment{
 
 // Plugin class
 class SVGFragmentsPlugin{
+
+	// SVGFragment instance array
+	SVGFragments = [];
 
 	// Plugin [ID](https://revealjs.com/creating-plugins/#plugin-definition)
 	id = "SVGFragments";
@@ -102,8 +106,8 @@ class SVGFragmentsPlugin{
 			// Inject SVG stylesheet
 			this.injectSVGStylesheet(event.target);
 
-			// Set initial classes
-			this.updateSVGClasses(event.target);
+			// Add SVGFragments
+			this.addSVGFragments(event.target);
 
 		}
 
@@ -146,13 +150,14 @@ class SVGFragmentsPlugin{
 		SVGDocument.insertBefore(piNode, SVGDocument.documentElement);
 	}
 
-	// Set initial classes
-	//
-	//   N.b. If nested, only need to set for top-level fragments
-	//
-	updateSVGClasses(objElement){
-		objElement.querySelectorAll(`${objectSelector}>${fragmentSelector}`).forEach(    // N.b. Child combinator
-			(element) => { new SVGFragment(element).update(); }
+	// Add SVGFragment instances to SVGFragments array
+	addSVGFragments(objElement){
+		objElement.querySelectorAll(`${objectSelector} ${fragmentSelector}`).forEach(
+			(element) => {
+				let fragment = new SVGFragment(element);
+				if(element.parentElement === objElement) fragment.sync();                // Sync top-level fragments only
+				this.SVGFragments.push(fragment);
+			}
 		);
 	}
 
@@ -161,11 +166,14 @@ class SVGFragmentsPlugin{
 
 		// Fragment event handler
 		let onFragmentEvent = (event) => {
-			for(let fragment of event.fragments){
-				if(fragment.matches(`${objectSelector} ${fragmentSelector}`)){    // N.b. Decendent combinator
-					new SVGFragment(fragment).update();
-				}
-			}
+
+			let HTMLFragments = event.fragments;
+			this.SVGFragments.filter(
+				(SVGFragment_) => HTMLFragments.includes(SVGFragment_.HTMLElement)
+			).forEach(
+				(SVGFragment_) => SVGFragment_.sync()
+			);
+
 		};
 
 		// Add fragmentEvent listeners
