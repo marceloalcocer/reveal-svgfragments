@@ -167,18 +167,19 @@ class SVGFragmentsPlugin{
 
 	// Add fragment event listeners
 	addFragmentEventListeners(){
-		for(let fragmentEvent of fragmentEvents){
-			Reveal.on(
-				fragmentEvent,
-				(event) => {
-					for(let fragment of event.fragments){
-						if (fragment.matches(`${objectSelector} ${fragmentSelector}`)) {    // N.b. Decendent combinator
-							new SVGFragment(fragment).update();
-						}
-					}
+
+		// Fragment event handler
+		let onFragmentEvent = (event) => {
+			for(let fragment of event.fragments){
+				if(fragment.matches(`${objectSelector} ${fragmentSelector}`)){    // N.b. Decendent combinator
+					new SVGFragment(fragment).update();
 				}
-			);
-		}
+			}
+		};
+
+		// Add fragmentEvent listeners
+		for(let fragmentEvent of fragmentEvents) Reveal.on(fragmentEvent, onFragmentEvent);
+
 	}
 
 }
