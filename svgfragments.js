@@ -79,9 +79,6 @@ class SVGFragmentsPlugin{
 			// SVG dependent initializations
 			this.initSVGDependent();
 
-			// Register new fragments with reveal.js
-			this.syncFragments();
-
 		};
 
 		// DOM state handling
@@ -94,12 +91,6 @@ class SVGFragmentsPlugin{
 				onDOMContentLoaded(null);
 		}
 
-	}
-
-	// Register new fragments with reveal.js
-	syncFragments(){
-		if(Reveal.isReady()) Reveal.syncFragments();
-		else Reveal.on("ready", (event) => Reveal.syncFragments());
 	}
 
 	// SVG  dependent initializations
