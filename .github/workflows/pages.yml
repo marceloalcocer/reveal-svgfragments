@@ -1,0 +1,179 @@
+name: "Deploy SVGFragments live demo to GitHub Pages"
+
+on:
+  push:
+    branches:
+     #- main                    # TODO: Uncomment
+      - dev                     # TODO: Remove
+  workflow_dispatch:            # Allows manual triggering
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+
+  # Build
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: "Checkout reveal.js"
+        uses: actions/checkout@v3
+        with:
+          repository: hakimel/reveal.js
+          ref: 4.4.0
+
+      - name: "DEBUG"           # TODO: Remove
+        run: ls -R
+
+      - name: "Prune reveal.js"
+        run: |
+          rm -r examples/ test/
+          rm demo.html plugins/*
+      - name: "Checkout SVGFragments"
+        uses: actions/checkout@v3
+        with:
+          repository: marceloalcocer/reveal-svgframents
+          path: plugins/svgfragments
+
+      - name: "DEBUG"           # TODO: Remove
+        run: ls -R
+
+      - name: "Instantiate demo SVG"
+        run: >-
+          echo '
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            <?xml-stylesheet type="text/css" href="plugin/svgfragments/svgfragments.css" ?>
+            <svg
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:cc="http://creativecommons.org/ns#"
+               xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:svg="http://www.w3.org/2000/svg"
+               xmlns="http://www.w3.org/2000/svg"
+               id="svg8"
+               version="1.1"
+               viewBox="0 0 60 20">
+              <circle id="circle0" r="8.0" cy="10.0" cx="10.0" style="fill:#ff0000;"/>
+              <circle id="circle1" r="8.0" cy="10.0" cx="30.0" style="fill:#00ff00;"/>
+              <circle id="circle2" r="8.0" cy="10.0" cx="50.0" style="fill:#0000ff;"/>
+            </svg>
+          '
+          > circles.svg
+      - name: "Fetch demo HTML"
+        run: >-
+          echo '
+            <!doctype html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                <title>reveal.js</title>
+                <link rel="stylesheet" href="dist/reset.css">
+                <link rel="stylesheet" href="dist/reveal.css">
+                <link rel="stylesheet" href="dist/theme/black.css" id="theme">
+              </head>
+              <body>
+              <div class="reveal">
+                <div class="slides">
+                  <section>
+                    <h1>SVGFragments demo</h1>
+                  </section>
+                  <section>
+                    <h3>SVG fragments</h3>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment" data-selector="#circle0"></span>
+                      <span class="fragment" data-selector="#circle1"></span>
+                      <span class="fragment" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                  <section>
+                    <h3>SVG fragment effects</h3>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment fade-out" data-selector="#circle0"></span>
+                      <span class="fragment fade-up" data-selector="#circle1"></span>
+                      <span class="fragment fade-down" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                  <section>
+                    <h3>Nested SVG fragments</h3>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment fade-in" data-selector="#circle0">
+                        <span class="fragment fade-out" data-selector="#circle0"></span>
+                      </span>
+                      <span class="fragment fade-up" data-selector="#circle1"></span>
+                      <span class="fragment fade-down" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                  <section>
+                    <h3>SVG fragment ordering</h3>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment" data-fragment-index="2" data-selector="#circle0"></span>
+                      <span class="fragment" data-fragment-index="1" data-selector="#circle1"></span>
+                      <span class="fragment" data-fragment-index="3" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                  <section>
+                    <h3>HTML and SVG fragments</h3>
+                    <ul>
+                      <li class="fragment">HTML fragment 0</li>
+                      <li class="fragment">HTML fragment 1</li>
+                    </ul>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment" data-selector="#circle0"></span>
+                      <span class="fragment" data-selector="#circle1"></span>
+                      <span class="fragment" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                  <section>
+                    <h3>Everything!</h3>
+                    <ul>
+                      <li class="fragment" data-fragment-index="1">HTML fragment 0</li>
+                      <li class="fragment" data-fragment-index="5">HTML fragment 1</li>
+                    </ul>
+                    <object data="circles.svg" type="image/svg+xml">
+                      <span class="fragment fade-in" data-fragment-index="2" data-selector="#circle0">
+                        <span class="fragment fade-out" data-fragment-index="4" data-selector="#circle0"></span>
+                      </span>
+                      <span class="fragment fade-up" data-fragment-index="0" data-selector="#circle1"></span>
+                      <span class="fragment fade-down" data-fragment-index="3" data-selector="#circle2"></span>
+                    </object>
+                  </section>
+                </div>
+              </div>
+              <script src="dist/reveal.js"></script>
+              <script src="plugin/svgfragments/svgfragments.js"></script>
+              <script>
+                Reveal.initialize(
+                  {
+                    plugins: [SVGFragments]
+                  } 
+                );
+              </script>
+              </body>
+            </html>
+          '
+          > index.html
+      - name: "Upload build"
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: .
+
+  # Deploy
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: "Deploy to GitHub Pages"
+        uses: actions/deploy-pages@v1
+        id: deployment
+
