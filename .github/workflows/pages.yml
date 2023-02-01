@@ -30,9 +30,7 @@ jobs:
         run: ls -R
 
       - name: "Prune reveal.js"
-        run: |
-          rm -r examples/ test/
-          rm demo.html plugins/*
+        run: rm -r examples/ test/ plugin/* demo.html
       - name: "Checkout SVGFragments"
         uses: actions/checkout@v3
         with:
