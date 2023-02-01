@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: marceloalcocer/reveal-svgfragments
-          path: plugins/svgfragments
+          path: plugin/svgfragments
 
       - name: "DEBUG"           # TODO: Remove
         run: ls -R
