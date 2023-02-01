@@ -44,7 +44,6 @@ jobs:
         run: >-
           echo '
             <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-            <?xml-stylesheet type="text/css" href="plugin/svgfragments/svgfragments.css" ?>
             <svg
                xmlns:dc="http://purl.org/dc/elements/1.1/"
                xmlns:cc="http://creativecommons.org/ns#"
