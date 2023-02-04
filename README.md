@@ -2,15 +2,15 @@
 
 A [reveal.js](https://github.com/hakimel/reveal.js) plugin to enable SVG element [fragments](https://revealjs.com/fragments/).
 
-[Live demo](https://marceloalcocer.github.io/svgfragments.html)
+✨👉 [Live demo](https://marceloalcocer.github.io/reveal-svgfragments/) 👈✨
 
 ## Installation
 
 Copy the repository to the `plugin` directory of your `reveal.js` installation;
 
 ```shell
-reveal.js/plugin $  wget https://github.com/marceloalcocer/reveal-svgfragments/archive/master.zip
-reveal.js/plugin $  unzip master.zip && rm master.zip
+reveal.js/plugin $  wget https://github.com/marceloalcocer/reveal-svgfragments/archive/main.zip
+reveal.js/plugin $  unzip main.zip && rm main.zip
 reveal.js/plugin $  mv reveal-svgfragments-master svgfragments
 reveal.js/plugin $
 reveal.js/plugin $  # …or perhaps…
@@ -37,9 +37,9 @@ Include SVG documents in the presentation using `<object>` tags.  Add child tags
 ```svg
 <!-- circles.svg -->
 <svg>
-  <circle id="circle0" r="10.0" cy="10.0" cx="0.0" />
-  <circle id="circle1" r="10.0" cy="10.0" cx="20.0" />
-  <circle id="circle2" r="10.0" cy="10.0" cx="40.0" />
+  <circle id="circle0" r="8.0" cy="10.0" cx="10.0" style="fill:#ff0000;"/>
+  <circle id="circle1" r="8.0" cy="10.0" cx="30.0" style="fill:#00ff00;"/>
+  <circle id="circle2" r="8.0" cy="10.0" cx="50.0" style="fill:#0000ff;"/>
 </svg>
 ```
 
