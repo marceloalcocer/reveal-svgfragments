@@ -3,7 +3,7 @@
 const fragmentEvents = ["fragmentshown", "fragmenthidden"];
 const fragmentSelector = ".fragment";
 const objectSelector = 'object[type="image/svg+xml"]';
-const SVGStylesheet = "/plugin/svgfragments/svgfragments.css";
+const SVGStylesheet = "plugin/svgfragments/svgfragments.css";
 
 
 // SVG fragment class
@@ -145,7 +145,7 @@ class SVGFragmentsPlugin{
 		let SVGDocument = objElement.contentDocument;
 		let piNode = SVGDocument.createProcessingInstruction(
 			"xml-stylesheet",
-			`type="text/css" href="${SVGStylesheet}"`
+			`type="text/css" href="${document.location.pathname}${SVGStylesheet}"`
 		);
 		SVGDocument.insertBefore(piNode, SVGDocument.documentElement);
 	}
