@@ -3,8 +3,7 @@ name: "Deploy SVGFragments live demo to GitHub Pages"
 on:
   push:
     branches:
-     #- main                    # TODO: Uncomment
-      - dev                     # TODO: Remove
+      - main
   workflow_dispatch:            # Allows manual triggering
 
 concurrency:
@@ -25,10 +24,6 @@ jobs:
         with:
           repository: hakimel/reveal.js
           ref: 4.4.0
-
-      - name: "DEBUG"           # TODO: Remove
-        run: ls -R
-
       - name: "Prune reveal.js"
         run: rm -r examples/ test/ plugin/* demo.html
       - name: "Checkout SVGFragments"
@@ -36,10 +31,6 @@ jobs:
         with:
           repository: marceloalcocer/reveal-svgfragments
           path: plugin/svgfragments
-
-      - name: "DEBUG"           # TODO: Remove
-        run: ls -R
-
       - name: "Instantiate demo SVG"
         run: >-
           echo '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -58,7 +49,7 @@ jobs:
             </svg>
           '
           > circles.svg
-      - name: "Fetch demo HTML"
+      - name: "Instantiate demo HTML"
         run: >-
           echo '
             <!doctype html>
