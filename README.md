@@ -11,7 +11,7 @@ Copy the repository to the `plugin` directory of your `reveal.js` installation;
 ```shell
 reveal.js/plugin $  wget https://github.com/marceloalcocer/reveal-svgfragments/archive/main.zip
 reveal.js/plugin $  unzip main.zip && rm main.zip
-reveal.js/plugin $  mv reveal-svgfragments-master svgfragments
+reveal.js/plugin $  mv reveal-svgfragments-main svgfragments
 reveal.js/plugin $
 reveal.js/plugin $  # …or perhaps…
 reveal.js/plugin $
